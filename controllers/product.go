@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/nathakrit061103jnt/crud_fiber_go_gorm/database"
-	"github.com/nathakrit061103jnt/crud_fiber_go_gorm/models"
+	"crud_fiber_go_gorm/database"
+	"crud_fiber_go_gorm/models"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,16 +41,27 @@ func CreateProduct(c *fiber.Ctx) error {
 func UpdateProduct(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	db := database.DBConn
-	product := new(models.Product)
 
-	if err := c.BodyParser(product); err != nil {
-		return c.Status(500).SendString("No Product Found with ID")
+	db := database.DBConn
+
+	product := models.Product{}
+
+	error := db.Model(product).Where("id = ?", id).First(&product).Error
+	if error != nil {
+		return c.Status(500).SendString(error.Error())
 	}
 
-	db.Model(product).Where("id = ?", id).Updates(product)
+	if error = c.BodyParser(&product); error != nil {
+		return c.Status(500).SendString(error.Error())
+	}
 
-	return c.Status(200).SendString("Update Product Successfully")
+	result := db.Model(product).Where("id = ?", id).Updates(product)
+
+	if result.Error != nil {
+		return c.Status(404).SendString("No Product Found")
+	}
+
+	return c.Status(200).JSON(map[string]interface{}{"result": "success"})
 
 }
 

@@ -1,4 +1,4 @@
-module github.com/nathakrit061103jnt/crud_fiber_go_gorm
+module crud_fiber_go_gorm
 
 go 1.16
 

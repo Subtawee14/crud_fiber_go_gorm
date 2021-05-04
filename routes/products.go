@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/nathakrit061103jnt/crud_fiber_go_gorm/controllers"
+	"crud_fiber_go_gorm/controllers"
 
 	"github.com/gofiber/fiber/v2"
 )
